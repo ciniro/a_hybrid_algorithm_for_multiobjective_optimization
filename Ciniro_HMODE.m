@@ -40,7 +40,7 @@ function [ind_best, aval_best, IGD_best, IGD_m, ind_pior, aval_pior, IGD_pior] =
     %configurações do tipo de distância a ser utilizada no NSGAII
     tipo_dist = 'euclidean'; %tipo de distância para o cálculo do IGD
     
-    %configurações do Diferencial Evolution Modificado
+    %configurações do Diferenttial Evolution Modificado
     CR = 0.9; %Taxa de cruzamento
     polaridadeTarget = 1; %Taxa que polariza o 'target' 
                           %em detrimento do vetor 'trial'
