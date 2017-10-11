@@ -112,7 +112,7 @@ function [ind_best, aval_best, IGD_best, IGD_m, ind_pior, aval_pior, IGD_pior] =
     for i = 1 : n_exec
         fprintf(['Iniciando a execução:',num2str(i),' \n']);
         
-        %Chamada ao Diferencial Evolution Modificado
+        %Chamada ao DE Modificado
         [ind_atuais, front_atuais] = diferencialEvolution(probKMeans, CR, polaridadeTarget, Fmax, Fmin, beta, n_aval, problem, npop, nvar, n_obj, qtdeIndividuos);
         
         %Insere a solução encontrada na execução i na matriz geral
@@ -170,7 +170,7 @@ function [ind_best, aval_best, IGD_best, IGD_m, ind_pior, aval_pior, IGD_pior] =
 
 end
 
-%Diferencial Evolution Modificado
+%DE Modificado
 function [individuos, fronteira] = diferencialEvolution(probKMeans, CR, poltarget, Fmax, Fmin, beta, n_aval, problem, npop, nvar, n_obj, qtdeIndividuos)
     %Gerando população inicial
     [individuos, fronteira] = geraPopInicial(npop, nvar, problem, n_obj);
@@ -195,7 +195,7 @@ function [individuos, fronteira] = diferencialEvolution(probKMeans, CR, poltarge
         %contador do custo de avaliações feitas na populaçao corrente
         icusto = 0;
         
-        %Filhos a serem gerados pelo Diferencial Evolution
+        %Filhos a serem gerados pelo Diferenttial Evolution
         filhos = zeros(npop,nvar);
         fronteira_filhos = zeros(npop,n_obj);  
         
@@ -425,7 +425,7 @@ function [distMultidao] = calculaDistMultidao(fronteira, npop, nobj, tipo, front
         end
     else
     %Cálculo da distância de multidão entre a fronteira e o filho gerado
-    %pelo Diferencial Evolution
+    %pelo Diferenttial Evolution
         fronteira(iCorrente,:) = frontfilho;
         distMultidao = 0;
 
