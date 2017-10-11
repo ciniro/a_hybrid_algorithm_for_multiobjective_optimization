@@ -1,17 +1,17 @@
 %------------------------------------------------------------------------%
 %          XIII Brazilian Congress on Computational Intelligence         %
-%                      NiterÛi, Rio de Janeiro, Brazil                   %
+%                      Niter√≥i, Rio de Janeiro, Brazil                   %
 %                         2017-30-10 to 2017-11-01                       %
 %                                                                        %
 %                      CINIRO APARECIDO LEITE NAMETALA                   %
-%                         (IFMG, BambuÌ, MG, Brazil)                     %
+%                         (IFMG, Bambu√≠, MG, Brazil)                     %
 %                                                                        %
 %                              GISELE L. PAPPA                           %
 %                          EDUARDO GONTIJO CARRANO                       %
 %                     (UFMG, Belo Horizonte, MG, Brazil)                 %
 %------------------------------------------------------------------------%
 %                                                                        %
-%            EVOLU«√O DIFERENCIAL HÕBRIDO COM K-MEANS E NSGA II          %
+%            EVOLU√á√ÉO DIFERENCIAL H√çBRIDO COM K-MEANS E NSGA II          %
 %            A Hybrid Algorithm for Multiobjective Optimization          %
 %                        (MODE + K means + NSGA II)                      %
 %                                                                        %
@@ -20,60 +20,60 @@
 function [ind_best, aval_best, IGD_best, IGD_m, ind_pior, aval_pior, IGD_pior] = Ciniro_HMODE(n_aval, problem, n_obj, n_exec)
 %
 %ENTRADAS
-% n_aval: n˙mero de avaliaÁıes da funÁ„o.
+% n_aval: n√∫mero de avalia√ß√µes da fun√ß√£o.
 % problem: 1 para a dtlz1 ou 2 para a dtlz2.
 % n_obj: 3 ou 5 objetivos.
-% n_exec: n˙mero de vezes que o algoritmo inteiro È executado.
+% n_exec: n√∫mero de vezes que o algoritmo inteiro √© executado.
 % 
-%SAÕDAS
-% ind_best: matriz contendo as vari·veis dos indivÌduos n„o dominados para o melhor valor de IGD obtido (IGD_best) em todas as n_exec execuÁıes.
-% aval_best: matriz contendo a avaliaÁ„o dos indivÌduos n„o dominados para o melhor valor de IGD obtido (IGD_best) em todas as n_exec execuÁıes.
-% IGD_best: melhor valor de IGD obtido nas n_exec execuÁıes.
-% IGD_m: mÈdia dos valores de IGD obtidos nas n_exec execuÁıes.
-% ind_pior: matriz contendo as vari·veis dos indivÌduos n„o dominados para o pior valor de IGD obtido (IGD_pior) em todas as n_exec execuÁıes.
-% aval_pior: matriz contendo a avaliaÁ„o dos indivÌduos n„o dominados para o pior valor de IGD obtido (IGD_pior) em todas as n_exec execuÁıes.
-% IGD_pior: pior valor de IGD obtido nas n_exec execuÁıes.
+%SA√çDAS
+% ind_best: matriz contendo as vari√°veis dos indiv√≠duos n√£o dominados para o melhor valor de IGD obtido (IGD_best) em todas as n_exec execu√ß√µes.
+% aval_best: matriz contendo a avalia√ß√£o dos indiv√≠duos n√£o dominados para o melhor valor de IGD obtido (IGD_best) em todas as n_exec execu√ß√µes.
+% IGD_best: melhor valor de IGD obtido nas n_exec execu√ß√µes.
+% IGD_m: m√©dia dos valores de IGD obtidos nas n_exec execu√ß√µes.
+% ind_pior: matriz contendo as vari√°veis dos indiv√≠duos n√£o dominados para o pior valor de IGD obtido (IGD_pior) em todas as n_exec execu√ß√µes.
+% aval_pior: matriz contendo a avalia√ß√£o dos indiv√≠duos n√£o dominados para o pior valor de IGD obtido (IGD_pior) em todas as n_exec execu√ß√µes.
+% IGD_pior: pior valor de IGD obtido nas n_exec execu√ß√µes.
     
-    %configuraÁıes iniciais
+    %configura√ß√µes iniciais
     clc;
     
-    %configuraÁıes do tipo de dist‚ncia a ser utilizada no NSGAII
-    tipo_dist = 'euclidean'; %tipo de dist‚ncia para o c·lculo do IGD
+    %configura√ß√µes do tipo de dist√¢ncia a ser utilizada no NSGAII
+    tipo_dist = 'euclidean'; %tipo de dist√¢ncia para o c√°lculo do IGD
     
-    %configuraÁıes do Diferencial Evolution Modificado
+    %configura√ß√µes do Diferencial Evolution Modificado
     CR = 0.9; %Taxa de cruzamento
     polaridadeTarget = 1; %Taxa que polariza o 'target' 
                           %em detrimento do vetor 'trial'
-    %definiÁ„o do intervalo de variaÁ„o da taxa de mutaÁ„o (peso)
+    %defini√ß√£o do intervalo de varia√ß√£o da taxa de muta√ß√£o (peso)
     Fmax = 1.2;
     Fmin = 0.2;
     
-    %O valor de F decai ao longo das iteraÁıes com base numa funÁ„o
-    %logÌstica de decaimento que tem curvatura baseada na taxa de
+    %O valor de F decai ao longo das itera√ß√µes com base numa fun√ß√£o
+    %log√≠stica de decaimento que tem curvatura baseada na taxa de
     %decaimento beta
     beta = calculaBeta(n_aval);
     
     qtdeIndividuos = 3; %Quantidade de individuos selecionados
     
-    %vetor que armazena o resultado do c·lculo da mÈtrica de hipervolume 
-    %IGD para as populaÁıes em geradas em todas as execuÁıes
+    %vetor que armazena o resultado do c√°lculo da m√©trica de hipervolume 
+    %IGD para as popula√ß√µes em geradas em todas as execu√ß√µes
     igdcompleto = zeros(1,n_exec);
     
-    %seta par‚metros conforme entradas
-    %k È setado dentro das funÁıes de benchmark, npop e nvar s„o 
-    %prÈ-determinados (conforme artigo)
+    %seta par√¢metros conforme entradas
+    %k √© setado dentro das fun√ß√µes de benchmark, npop e nvar s√£o 
+    %pr√©-determinados (conforme artigo)
     
-    %Probabilidade de uso do algoritmo de clusterizaÁ„o 
-    %K Means nas amostras para seleÁ„o de indivÌduos em
-    %detrimento de seleÁ„o aleatÛria (propKMeans)
-    %O valor È setado em 0% em 5 objetivos por causa do
-    %custo computacional que È alto.
+    %Probabilidade de uso do algoritmo de clusteriza√ß√£o 
+    %K Means nas amostras para sele√ß√£o de indiv√≠duos em
+    %detrimento de sele√ß√£o aleat√≥ria (propKMeans)
+    %O valor esta setado como padr√£o em 0% em 5 objetivos por causa do
+    %custo computacional que √© alto. Modifique isso para realizar seus testes, se desejar.
                     
-    %o n˙mero de individuos e geracoes e determinado com os mesmos
-    %valores do artigo: [DEB, Kalyanmoy e JAIN, Himanshu. ìAn Evolutionary Many-Objective Optimization
+    %o n√∫mero de individuos e geracoes e determinado com os mesmos
+    %valores do artigo: [DEB, Kalyanmoy e JAIN, Himanshu. ‚ÄúAn Evolutionary Many-Objective Optimization
     %Algorithm Using Reference-Point-Based Nondominated Sorting Approach, Part I: Solving
-    %Problems With Box Contraintsî. IEEE Transations on Evolutionary Computation, Vol. 18,
-    %N∫. 4, 2014.] - Este foi utilizado com benchmark
+    %Problems With Box Contraints‚Äù. IEEE Transations on Evolutionary Computation, Vol. 18,
+    %N¬∫. 4, 2014.] - Este foi utilizado com benchmark
 
     if  problem == 1 && n_obj == 3
         npop = 91;
@@ -96,30 +96,30 @@ function [ind_best, aval_best, IGD_best, IGD_m, ind_pior, aval_pior, IGD_pior] =
         probKMeans = 0;
         benchmark = load('dtlz2_5d.mat');
     else
-        msgbox('Indique 1 ou 2 para problema e 3 ou 5 para n˙mero de objetivos!');
-        error('Indique 1 ou 2 para problema e 3 ou 5 para n˙mero de objetivos!');
+        msgbox('Indique 1 ou 2 para problema e 3 ou 5 para n√∫mero de objetivos!');
+        error('Indique 1 ou 2 para problema e 3 ou 5 para n√∫mero de objetivos!');
     end
 
-    %matriz que armazena as informaÁıes completas das soluÁıes trabalhadas
-    %em todas as execuÁıes de todas as populacoes sendo:
-    %'1 atÈ nvar': Õndividuos na populaÁ„o com nvar dimensıes
-    %'nvar+1 atÈ tamanho total da matriz': AvaliaÁıes(fronteira) para n_obj
+    %matriz que armazena as informa√ß√µes completas das solu√ß√µes trabalhadas
+    %em todas as execu√ß√µes de todas as populacoes sendo:
+    %'1 at√© nvar': √çndividuos na popula√ß√£o com nvar dimens√µes
+    %'nvar+1 at√© tamanho total da matriz': Avalia√ß√µes(fronteira) para n_obj
     tam = nvar+n_obj;
     popcompleta = repmat(struct('populacao', zeros(npop, tam)), n_exec, 1);
     
-    %Ir· executar n_exec vezes todo o algoritmo e retornar· os melhores
+    %Ir√° executar n_exec vezes todo o algoritmo e retornar√° os melhores
     %resultados encontrados
     for i = 1 : n_exec
-        fprintf(['Iniciando a execuÁ„o:',num2str(i),' \n']);
+        fprintf(['Iniciando a execu√ß√£o:',num2str(i),' \n']);
         
         %Chamada ao Diferencial Evolution Modificado
         [ind_atuais, front_atuais] = diferencialEvolution(probKMeans, CR, polaridadeTarget, Fmax, Fmin, beta, n_aval, problem, npop, nvar, n_obj, qtdeIndividuos);
         
-        %Insere a soluÁ„o encontrada na execuÁ„o i na matriz geral
+        %Insere a solu√ß√£o encontrada na execu√ß√£o i na matriz geral
         popcompleta(i).populacao(:,1:nvar) = ind_atuais;
         popcompleta(i).populacao(:,nvar+1:tam) = front_atuais;
         
-        %Calcula IGD para a fronteira da populaÁ„o corrente contra a 
+        %Calcula IGD para a fronteira da popula√ß√£o corrente contra a 
         %fronteira problema do benchmark escolhido e armazena
         if  problem == 1 && n_obj == 3
             igdcompleto(i) = calculaIGD(front_atuais, benchmark.fronteiraReal, tipo_dist);
@@ -133,50 +133,50 @@ function [ind_best, aval_best, IGD_best, IGD_m, ind_pior, aval_pior, IGD_pior] =
 
     end
 
-    %Melhor indivÌduo
+    %Melhor indiv√≠duo
     imelhorIndividuo = find(igdcompleto == min(igdcompleto));
     
-    %Matriz contendo as vari·veis dos indivÌduos n„o dominados para o 
-    %melhor valor de IGD obtido (IGD_best) em todas as n_exec execuÁıes.
+    %Matriz contendo as vari√°veis dos indiv√≠duos n√£o dominados para o 
+    %melhor valor de IGD obtido (IGD_best) em todas as n_exec execu√ß√µes.
     ind_best = popcompleta(imelhorIndividuo).populacao(:,1:nvar);
     
-    %aval_best: matriz contendo a avaliaÁ„o dos indivÌduos n„o dominados 
+    %aval_best: matriz contendo a avalia√ß√£o dos indiv√≠duos n√£o dominados 
     %para o melhor valor de IGD obtido (IGD_best) em todas as n_exec 
-    %execuÁıes.
+    %execu√ß√µes.
     aval_best = popcompleta(imelhorIndividuo).populacao(:,nvar+1:tam);
     
-    %IGD_best: melhor valor de IGD obtido nas n_exec execuÁıes.
+    %IGD_best: melhor valor de IGD obtido nas n_exec execu√ß√µes.
     IGD_best = igdcompleto(imelhorIndividuo);
     
-    %Pior indivÌduo
+    %Pior indiv√≠duo
     ipiorIndividuo = find(igdcompleto == max(igdcompleto));
     
-    %ind_pior: matriz contendo as vari·veis dos indivÌduos n„o dominados 
+    %ind_pior: matriz contendo as vari√°veis dos indiv√≠duos n√£o dominados 
     %para o pior valor de IGD obtido (IGD_pior) em todas as n_exec 
-    %execuÁıes.
+    %execu√ß√µes.
     ind_pior = popcompleta(ipiorIndividuo).populacao(:,1:nvar);
     
-    %aval_pior: matriz contendo a avaliaÁ„o dos indivÌduos n„o dominados 
+    %aval_pior: matriz contendo a avalia√ß√£o dos indiv√≠duos n√£o dominados 
     %para o pior valor de IGD obtido (IGD_pior) em todas as n_exec 
-    %execuÁıes.
+    %execu√ß√µes.
     aval_pior = popcompleta(ipiorIndividuo).populacao(:,nvar+1:tam);
     
-    %IGD_pior: pior valor de IGD obtido nas n_exec execuÁıes.
+    %IGD_pior: pior valor de IGD obtido nas n_exec execu√ß√µes.
     IGD_pior = igdcompleto(ipiorIndividuo);
     
-    %C·lculo do IGD-m
-    %IGD_m: mÈdia dos valores de IGD obtidos nas n_exec execuÁıes.
+    %C√°lculo do IGD-m
+    %IGD_m: m√©dia dos valores de IGD obtidos nas n_exec execu√ß√µes.
     IGD_m = mean(igdcompleto);
 
 end
 
 %Diferencial Evolution Modificado
 function [individuos, fronteira] = diferencialEvolution(probKMeans, CR, poltarget, Fmax, Fmin, beta, n_aval, problem, npop, nvar, n_obj, qtdeIndividuos)
-    %Gerando populaÁ„o inicial
+    %Gerando popula√ß√£o inicial
     [individuos, fronteira] = geraPopInicial(npop, nvar, problem, n_obj);
  
     %---------------------------------------------------------------------
-    %DefiniÁ„o do menor e maior valor de F na curva da funÁ„o logÌstica de
+    %Defini√ß√£o do menor e maior valor de F na curva da fun√ß√£o log√≠stica de
     %decaimento - valores usados para mapear F no intervalo determinado
     ngen = floor(n_aval/npop);
     Finf = (-(exp(ngen/beta)^2)*0.01+1);
@@ -188,40 +188,40 @@ function [individuos, fronteira] = diferencialEvolution(probKMeans, CR, poltarge
     while ncal < n_aval
         prog = (ncal*100)/n_aval;
         fprintf(['[',num2str(prog),'] \n']);
-        %Aplica dist‚ncia de multid„o entre os indivÌduos da populaÁ„o
+        %Aplica dist√¢ncia de multid√£o entre os indiv√≠duos da popula√ß√£o
         %inicial para averiguar dominancias
         distMultidao = calculaDistMultidao(fronteira,npop,n_obj,1);
         
-        %contador do custo de avaliaÁıes feitas na populaÁao corrente
+        %contador do custo de avalia√ß√µes feitas na popula√ßao corrente
         icusto = 0;
         
         %Filhos a serem gerados pelo Diferencial Evolution
         filhos = zeros(npop,nvar);
         fronteira_filhos = zeros(npop,n_obj);  
         
-        %Dinamicamente o valor de F È diminuido de geraÁ„o em geraÁ„o tendo
-        %a exploraÁ„o X explotaÁ„o balanceada pelo valor de beta que
-        %determina a curvatura da linha da funÁ„o logÌstica de decaimento
+        %Dinamicamente o valor de F √© diminuido de gera√ß√£o em gera√ß√£o tendo
+        %a explora√ß√£o X explota√ß√£o balanceada pelo valor de beta que
+        %determina a curvatura da linha da fun√ß√£o log√≠stica de decaimento
         F = (-(exp(gen/beta)^2)*0.01+1);        
         F = ((F-Finf)/(Fsup-Finf))*(Fmax-Fmin)+Fmin;
             
-        %Iniciando nova populaÁ„o
+        %Iniciando nova popula√ß√£o
         for i = 1:npop
-            %seleciona-se os individuos que ir„o compor o vetor 'trial'
+            %seleciona-se os individuos que ir√£o compor o vetor 'trial'
             selecionados = selecao(probKMeans, npop, fronteira, distMultidao, i, qtdeIndividuos);
             
-            %ConstrÛi-se o vetor 'trial' com base nos par‚metros de
-            %mutaÁ„o
+            %Constr√≥i-se o vetor 'trial' com base nos par√¢metros de
+            %muta√ß√£o
             trial = mutacao(individuos, selecionados, F);
             
-            %define o individuo corrente como indivÌduo 'target'
+            %define o individuo corrente como indiv√≠duo 'target'
             %individuo 'target'
             target =  individuos(i,:);
             %avaliacao do individuo 'target'
             fronttarget = fronteira(i,:);
 
-            %Executa a operaÁ„o de cruzamento entre o individuo corrente
-            %'target' e o vetor de perturbaÁ„o 'trial' para gerar um novo
+            %Executa a opera√ß√£o de cruzamento entre o individuo corrente
+            %'target' e o vetor de perturba√ß√£o 'trial' para gerar um novo
             %individuo na nova populacao
             filho = cruzamento(individuos, target, trial, CR, nvar, poltarget);
             
@@ -229,10 +229,10 @@ function [individuos, fronteira] = diferencialEvolution(probKMeans, CR, poltarge
             frontfilho = problema(problem, filho);
 
             %Avalia dominancia entre o filho gerado e o vetor 'target' e
-            %insere o vencedor na nova populaÁ„o
+            %insere o vencedor na nova popula√ß√£o
             [filhos(i,:), fronteira_filhos(i,:)] = avaliaIndividuo(target, filho, fronttarget,  frontfilho, fronteira, npop, n_obj, i, distMultidao);
 
-            %Incrementa o contador de custo de avaliaÁ„o
+            %Incrementa o contador de custo de avalia√ß√£o
             icusto = icusto + 1;
         end
         % ----------------------------------------------------------------
@@ -240,15 +240,15 @@ function [individuos, fronteira] = diferencialEvolution(probKMeans, CR, poltarge
         %atualiza o contador de custo
         ncal = ncal + icusto;
         gen = gen + 1;
-        %PopulaÁ„o antiga È substituida pela nova
+        %Popula√ß√£o antiga √© substituida pela nova
         individuos = filhos;
         fronteira = fronteira_filhos;
     end
     
 end
 
-%Para o benchmark escolhido cria uma populaÁ„o inicial aleatoriamente e
-%na sequencia avalia a mesma gerando a avaliaÁ„o (fronteira) atual
+%Para o benchmark escolhido cria uma popula√ß√£o inicial aleatoriamente e
+%na sequencia avalia a mesma gerando a avalia√ß√£o (fronteira) atual
 function [individuos, fronteira] = geraPopInicial (npop, nvar, problem, n_obj)
     %gera npop individuos aleatoriamente
     fronteira = zeros(npop, n_obj);
@@ -260,7 +260,7 @@ function [individuos, fronteira] = geraPopInicial (npop, nvar, problem, n_obj)
     end
 end
 
-%Seleciona o problema a ser utilizado no c·lculo da fronteira
+%Seleciona o problema a ser utilizado no c√°lculo da fronteira
 function [resp] = problema(problem, ind)
     if problem == 1
         resp = dtlz1(ind)';
@@ -269,39 +269,39 @@ function [resp] = problema(problem, ind)
     end
 end
 
-%Seleciona uma quantidade especÌfica de individuos aleatoriamente e mantÈm,
+%Seleciona uma quantidade espec√≠fica de individuos aleatoriamente e mant√©m,
 %rodada a rodada, os que tem dominancia
 function [selecionados] = selecao(probKMeans, npop, fronteira, distMultidao, iCorrente, qtdeIndividuos)
-    %seleciona na populaÁ„o aleatoriamente ou atravÈs do algoritmo de
-    %clusterizaÁ„o K Means com base em uma probabilidade os indivÌduos que
-    %ir„o para a fase de cruzamento e mutaÁ„o
+    %seleciona na popula√ß√£o aleatoriamente ou atrav√©s do algoritmo de
+    %clusteriza√ß√£o K Means com base em uma probabilidade os indiv√≠duos que
+    %ir√£o para a fase de cruzamento e muta√ß√£o
     if rand(1)<probKMeans
         candidatos = Kmeans(fronteira,qtdeIndividuos*2+1);
     else
         candidatos = randperm(npop,qtdeIndividuos*2+1);
     end
     
-    %Verifica se algum individuo È igual ao individuoCorrente    
+    %Verifica se algum individuo √© igual ao individuoCorrente    
     nrepetidos = find(candidatos == iCorrente);
     
-    %caso algum seja repetido ele È retirado da lista
+    %caso algum seja repetido ele √© retirado da lista
     if nrepetidos ~= 0
         candidatos(nrepetidos(1)) = [];
     end
     
-    %Avalia qual individuo domina o outro e seleciona o n„o dominado
+    %Avalia qual individuo domina o outro e seleciona o n√£o dominado
     selecionados = zeros(1,qtdeIndividuos);
     j = 1;
 
     for i = 1:qtdeIndividuos
         %avalia a dominancia entre os dois primeiros individuos escolhidos 
-        %aleatoriamente por meio das suas avaliaÁıes
+        %aleatoriamente por meio das suas avalia√ß√µes
         dominado = calculaDominado(fronteira(candidatos(j),:),fronteira(candidatos(j+1),:));
         
-        %caso n„o haja domin‚ncia direta entre eles È aplicada ent„o a dist‚ncia
-        %de multid„o para escolher quem domina quem
+        %caso n√£o haja domin√¢ncia direta entre eles √© aplicada ent√£o a dist√¢ncia
+        %de multid√£o para escolher quem domina quem
         if dominado == 0
-            %O candidato com mais vizinhos È dominado
+            %O candidato com mais vizinhos √© dominado
             if distMultidao(candidatos(j)) < distMultidao(candidatos(j+1))
                 dominado = 2;
             else
@@ -309,7 +309,7 @@ function [selecionados] = selecao(probKMeans, npop, fronteira, distMultidao, iCo
             end
         end
         
-        %ApÛs determinaÁ„o do dominado aloca-se o candidato escolhido a
+        %Ap√≥s determina√ß√£o do dominado aloca-se o candidato escolhido a
         %lista dos selecionados
         if dominado == 1
             selecionados(i) = candidatos(j+1);
@@ -317,21 +317,21 @@ function [selecionados] = selecao(probKMeans, npop, fronteira, distMultidao, iCo
             selecionados(i) = candidatos(j);
         end
         
-        %Passa para a prÛxima dupla a ser avaliada
+        %Passa para a pr√≥xima dupla a ser avaliada
         j = j + 2;
     end
 end
 
-%Avalia por dominancia e dist‚ncia de multid„o uma quantidade
+%Avalia por dominancia e dist√¢ncia de multid√£o uma quantidade
 %qtdeAvaliados selecionando apenas uma quantidade de qtdeIndividuos para
-%comporem o vetor 'trial' que ir· para o cruzamento
+%comporem o vetor 'trial' que ir√° para o cruzamento
 function [trial] = mutacao(individuos, selecionados, F)
-    %cria o vetor de perturbaÁ„o 'trial' sendo trial= xr3 + (F*(xr1-xr2))
+    %cria o vetor de perturba√ß√£o 'trial' sendo trial= xr3 + (F*(xr1-xr2))
     trial = individuos(selecionados(3),:) + F * (individuos(selecionados(1),:) - individuos(selecionados(2),:));
 end
 
 %Executa o cruzamento dos vetores 'target' e 'trial' levando-se em conta a
-%taxa de cruzamento. Os vetores trocam posiÁıes caso a probabilidade
+%taxa de cruzamento. Os vetores trocam posi√ß√µes caso a probabilidade
 %ocorra.
 function [novofilho] = cruzamento(indpop, target, trial, CR, nvar, poltarget)
     i = randi(nvar);
@@ -369,14 +369,14 @@ function [novofilho] = cruzamento(indpop, target, trial, CR, nvar, poltarget)
 end
 
 %Avalia o individuo 'target' e o filho gerado para saber quem vai para a
-%nova populaÁ„o
+%nova popula√ß√£o
 function [novoIndividuo, frontNovoIndividuo] = avaliaIndividuo(t, f, frontt, frontf, fronteira,npop,n_obj,iCorrente,distMult)
     dominado = calculaDominado(frontt,frontf);   
     
     %Caso nenhum domine nenhum
     if dominado == 0
-        %calcula a dist‚ncia de multid„o do filho gerado para a fronteira
-        %e compara a mesma com a do indivÌduo 'target' (corrente)
+        %calcula a dist√¢ncia de multid√£o do filho gerado para a fronteira
+        %e compara a mesma com a do indiv√≠duo 'target' (corrente)
         distMultidaoFilho = calculaDistMultidao(fronteira,npop,n_obj,2,frontf,iCorrente);
         if distMult(iCorrente) > distMultidaoFilho
            dominado = 1;
@@ -385,7 +385,7 @@ function [novoIndividuo, frontNovoIndividuo] = avaliaIndividuo(t, f, frontt, fro
         end
     end
     
-    %Retorna o dominante para a nova populaÁ„o
+    %Retorna o dominante para a nova popula√ß√£o
     if dominado == 1
         novoIndividuo = t;
         frontNovoIndividuo = frontt;
@@ -395,27 +395,27 @@ function [novoIndividuo, frontNovoIndividuo] = avaliaIndividuo(t, f, frontt, fro
     end
 end
 
-%Aplica as soluÁıes da fronteira o calculo da distancia de multidao
+%Aplica as solu√ß√µes da fronteira o calculo da distancia de multidao
 %conforme descrito no NSGAII
 function [distMultidao] = calculaDistMultidao(fronteira, npop, nobj, tipo, frontfilho, iCorrente)
-    %C·lculo da dist‚ncia de multid„o entre a fronteira e a populaÁ„o
+    %C√°lculo da dist√¢ncia de multid√£o entre a fronteira e a popula√ß√£o
     %corrente
     if tipo == 1
         distMultidao = zeros(1,npop);
         for i=1:nobj
-            %ordena os valores das avaliaÁoes em cada objetivo
+            %ordena os valores das avalia√ßoes em cada objetivo
             [ordenado,indices] = sortrows(fronteira,i);
 
-            %coleta a diferenÁao entre os valores m·ximos e mÌnimos em cada objetivo
+            %coleta a diferen√ßao entre os valores m√°ximos e m√≠nimos em cada objetivo
             difmaxmin = max(ordenado(:,i)) - min(ordenado(:,i));
 
-            %aplica o limite infinito para a primeira soluÁ„o
+            %aplica o limite infinito para a primeira solu√ß√£o
             distMultidao(indices(1)) = inf;
-            %aplica o limite infinito para a ˙ltima soluÁ„o
+            %aplica o limite infinito para a √∫ltima solu√ß√£o
             distMultidao(indices(npop)) = inf;
 
-            %calcula-se a dist‚ncia de multid„o para todos os indivÌduos com
-            %exceÁ„o do primeiro e do ˙ltimo que s„o referÍncias (setados com
+            %calcula-se a dist√¢ncia de multid√£o para todos os indiv√≠duos com
+            %exce√ß√£o do primeiro e do √∫ltimo que s√£o refer√™ncias (setados com
             %infinito para suas proprias distancias)
             for j = 2:npop-1
                 difpontos = ordenado(j+1,i) - ordenado(j-1,i);
@@ -424,20 +424,20 @@ function [distMultidao] = calculaDistMultidao(fronteira, npop, nobj, tipo, front
             end
         end
     else
-    %C·lculo da dist‚ncia de multid„o entre a fronteira e o filho gerado
+    %C√°lculo da dist√¢ncia de multid√£o entre a fronteira e o filho gerado
     %pelo Diferencial Evolution
         fronteira(iCorrente,:) = frontfilho;
         distMultidao = 0;
 
         for i=1:nobj    
-            %ordena os valores das avaliaÁoes em cada objetivo
+            %ordena os valores das avalia√ßoes em cada objetivo
             [ordenado,indices] = sortrows(fronteira,i);
 
-            %coleta a diferenÁao entre os valores m·ximos e mÌnimos em cada objetivo
+            %coleta a diferen√ßao entre os valores m√°ximos e m√≠nimos em cada objetivo
             difmaxmin = max(ordenado(:,i)) - min(ordenado(:,i));
             
-            %calcula-se a dist‚ncia de multid„o da fronteira para o indice
-            %da populaÁ„o que substituiu com o filho gerado
+            %calcula-se a dist√¢ncia de multid√£o da fronteira para o indice
+            %da popula√ß√£o que substituiu com o filho gerado
             iOrdenado = find(indices == iCorrente);
             if iOrdenado ~= 1 && iOrdenado ~= npop
                 difpontos = ordenado(iOrdenado+1,i) - ordenado(iOrdenado-1,i);
@@ -447,18 +447,18 @@ function [distMultidao] = calculaDistMultidao(fronteira, npop, nobj, tipo, front
     end
 end
 
-%Identifica se existe dominaÁ„o de um indivÌduo sobre o outro e qual È o
+%Identifica se existe domina√ß√£o de um indiv√≠duo sobre o outro e qual √© o
 %dominado
 function [dominado] = calculaDominado(individuo1, individuo2)
     %Nenhum domina nenhum
     dominado = 0;
     
-    %IndivÌduo 1 È dominado por 2
+    %Indiv√≠duo 1 √© dominado por 2
     if all(individuo2 >= individuo1) && any(individuo1 < individuo2)
         dominado = 1;
     end
     
-    %IndivÌduo 2 È dominado por 1
+    %Indiv√≠duo 2 √© dominado por 1
     if all(individuo1 >= individuo2) && any(individuo2 < individuo1)
         dominado = 2;
     end
@@ -469,8 +469,8 @@ function [total] = calculaIGD(fatual, freal, tipo)
     [tfreal, ~] = size(freal);
     total = 0;
 
-    %Toma a mÌnima dist‚ncia de todos os pontos da fronteira atual para 
-    %cada ponto da fronteira do benchmark escolhido e extrai a mÈdia
+    %Toma a m√≠nima dist√¢ncia de todos os pontos da fronteira atual para 
+    %cada ponto da fronteira do benchmark escolhido e extrai a m√©dia
     for i = 1:tfreal
         [tfatual, ~] = size(fatual);
         disttodos = zeros(tfatual, 1);
@@ -484,7 +484,7 @@ function [total] = calculaIGD(fatual, freal, tipo)
     total = total / tfreal;
 end
 
-%FunÁ„o fornecida DTLZ1
+%Fun√ß√£o fornecida DTLZ1
 function [F, varargout] = dtlz1(x, varargin)
     x = x(:);
 
@@ -510,7 +510,7 @@ function [F, varargout] = dtlz1(x, varargin)
     varargout(2) = {0};
 end
 
-%FunÁ„o fornecida DTLZ2
+%Fun√ß√£o fornecida DTLZ2
 function [F, varargout] = dtlz2(x, varargin)
 
     x = x(:);
@@ -540,7 +540,7 @@ function [F, varargout] = dtlz2(x, varargin)
     varargout(2) = {0};
 end
 
-%Calcula um numero ideal para a curvatura da funÁ„o logistica de decaimento
+%Calcula um numero ideal para a curvatura da fun√ß√£o logistica de decaimento
 %que determina a taxa de decaimento de F ao longo das iteracoes
 function beta = calculaBeta(ncal)
     if ncal <= 100
