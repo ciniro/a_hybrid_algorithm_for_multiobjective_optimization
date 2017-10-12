@@ -1,18 +1,22 @@
 %------------------------------------------------------------------------%
-%                  Universidade Federal de Minas Gerais                  %
-%                  Departamento de Ciência da Computação                 %
-%                      Projeto - Computação Natural                      %
-%                          Prof. Gisele L. Pappa                         %
+%          XIII Brazilian Congress on Computational Intelligence         %
+%                      NiterÃ³i, Rio de Janeiro, Brazil                   %
+%                         2017-30-10 to 2017-11-01                       %
 %                                                                        %
-%                 Aluno: CINIRO APARECIDO LEITE NAMETALA                 %
+%                      CINIRO APARECIDO LEITE NAMETALA                   %
+%                         (IFMG, BambuÃ­, MG, Brazil)                     %
+%                                                                        %
+%                              GISELE L. PAPPA                           %
+%                          EDUARDO GONTIJO CARRANO                       %
+%                     (UFMG, Belo Horizonte, MG, Brazil)                 %
 %------------------------------------------------------------------------%
 
 %                          ALGORITMO K MEANS                             %
 
 %------------------------------------------------------------------------%
 
-%x é a amostra de dados que será clusterizada
-%qtde é a quantidade de centróides na inicializacao do k means
+%x Ã© a amostra de dados que serÃ¡ clusterizada
+%qtde Ã© a quantidade de centrÃ³ides na inicializacao do k means
 
 function [selecaofcm] = Kmeans(x,qtde)
     
@@ -23,25 +27,25 @@ function [selecaofcm] = Kmeans(x,qtde)
     ls = max(max(x));
     li = min(min(x));
 
-    %Cálculo do tamanho de K
+    %CÃ¡lculo do tamanho de K
     k = 6;
-    %coluna que vai armazenar a qual grupo pertence um dado padrão
+    %coluna que vai armazenar a qual grupo pertence um dado padrÃ£o
     x = [x zeros(nrows,1)];
 
     tolerancia = 1e-5;
     parada = false;
     iteracoes = 0;
 
-    %sorteia as médias
+    %sorteia as mÃ©dias
     mu = rand(k,ncols)*(ls - li)+li;
 
-    %inicia a convergência
+    %inicia a convergÃªncia
     while (parada==false)
         iteracoes = iteracoes + 1;
         mu_anterior = mu;
 
-        %construção da matrix de dissimilaridade
-        %Distância Euclideana
+        %construÃ§Ã£o da matrix de dissimilaridade
+        %DistÃ¢ncia Euclideana
         dist = zeros(nrows,k);
         for cont=1:k
              euc = 0;
@@ -56,7 +60,7 @@ function [selecaofcm] = Kmeans(x,qtde)
         [valor,grupo] = min(dist');
         x(:,(ncols+1))=grupo';
 
-        %calcula os novos centroídes baseado na média dos grupos
+        %calcula os novos centroÃ­des baseado na mÃ©dia dos grupos
         for cont=1:k
             for j=1:ncols 
                 indices = find(x(:,(ncols+1))==cont);
@@ -68,7 +72,7 @@ function [selecaofcm] = Kmeans(x,qtde)
             end
         end
 
-        %averigua a convergencia baseada em uma tolerancia mínima
+        %averigua a convergencia baseada em uma tolerancia mÃ­nima
         if sum(sum(abs(mu - mu_anterior)) > tolerancia)==0
             parada = true;
         end
